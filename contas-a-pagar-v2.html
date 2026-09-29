@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="A Pagar">
+<title>Contas a Pagar</title>
+<style>
+:root{--bg:#f4f5fb;--card:#fff;--tx:#161a2e;--mu:#7b8098;--ln:#e6e8f2;--ac:#4f46e5;--acbg:#ecebfd;--ok:#12a36b;--okbg:#e2f6ee;--rd:#e5484d;--rdbg:#fdecec;--am:#c27803;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0f1a;--card:#191c2c;--tx:#eef0fb;--mu:#9095ad;--ln:#2a2e45;--ac:#8b85ff;--acbg:#25254a;--ok:#3ecf94;--okbg:#12362a;--rd:#ff7a7f;--rdbg:#3b1c1f;--am:#ffb340}}
+:root[data-theme="dark"]{--bg:#0d0f1a;--card:#191c2c;--tx:#eef0fb;--mu:#9095ad;--ln:#2a2e45;--ac:#8b85ff;--acbg:#25254a;--ok:#3ecf94;--okbg:#12362a;--rd:#ff7a7f;--rdbg:#3b1c1f;--am:#ffb340}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text",Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+body{max-width:640px;margin:0 auto;padding:8px 16px calc(110px + env(safe-area-inset-bottom,0px))}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+h1{font-size:26px;margin:10px 0 14px;letter-spacing:-.4px}
+h3{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mu);margin:22px 2px 8px}
+input,select{font:inherit;font-size:16px;width:100%;padding:12px;border-radius:14px;border:1px solid var(--ln);background:var(--card);color:var(--tx);-webkit-appearance:none;appearance:none;min-height:46px}
+.hero{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:#fff;border-radius:24px;padding:20px}
+.hero small{opacity:.8;font-size:13px}.hero .big{font-size:34px;font-weight:700;letter-spacing:-1px;margin:2px 0 14px}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.st div{background:rgba(255,255,255,.16);border-radius:14px;padding:9px}.st b{display:block;font-size:14px;white-space:nowrap}
+.bar{height:8px;background:var(--ln);border-radius:4px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok);border-radius:4px}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);padding:12px;border-radius:16px;margin-bottom:8px;width:100%;text-align:left}
+.ck{flex:none;width:34px;height:34px;border-radius:12px;border:2px solid var(--ln);color:#fff;font-size:16px}
+.ck.ok{background:var(--ok);border-color:var(--ok)}
+.mid{flex:1;min-width:0}.mid b,.mid small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mid small{color:var(--mu);font-size:13px}
+.val{text-align:right;font-weight:700}.val small{display:block;font-size:12px;font-weight:500}
+.late{color:var(--rd)}.paid{color:var(--ok)}.pend{color:var(--am)}
+.done .mid,.done .val b{opacity:.5}
+.mn{display:flex;align-items:center;justify-content:space-between;background:var(--card);border-radius:18px;padding:6px;margin-bottom:12px}
+.mn button{width:44px;height:44px;font-size:22px;color:var(--ac)}.mn b{text-transform:capitalize}
+.card{background:var(--card);border-radius:18px;padding:14px;margin-bottom:10px;width:100%;text-align:left;display:block}
+.card .l1{display:flex;justify-content:space-between;gap:8px;margin-bottom:2px}.card .l1 b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card small{color:var(--mu);font-size:13px}.card .bar{margin:10px 0 6px}
+.chips{display:flex;gap:6px;margin:10px 0}.chip{padding:8px 16px;border-radius:18px;background:var(--card);font-size:14px}.chip.on{background:var(--ac);color:#fff}
+.empty{text-align:center;color:var(--mu);padding:36px 20px;background:var(--card);border-radius:18px}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;align-items:flex-end;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:1px solid var(--ln);max-width:640px;margin:0 auto;z-index:5}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;font-size:11px;color:var(--mu);padding:4px 0}
+nav button span{font-size:22px;line-height:1.2}nav .on{color:var(--ac);font-weight:600}
+nav .plus{flex:none;width:58px;height:58px;border-radius:29px;background:var(--ac);color:#fff;font-size:32px;justify-content:center;margin:0 6px;transform:translateY(-14px);box-shadow:0 6px 16px rgba(79,70,229,.4)}
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:9}#ov.show{display:flex}
+#sh{background:var(--bg);width:100%;max-width:640px;max-height:92%;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:24px 24px 0 0;padding:16px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.top h2{margin:0;font-size:20px}.x{color:var(--ac);font-weight:600;padding:8px}
+label{display:block;font-size:13px;color:var(--mu);margin:12px 4px 5px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--ln);border-radius:14px;padding:3px;gap:2px}.seg button{padding:10px 4px;border-radius:12px;font-size:14px}.seg .on{background:var(--card);font-weight:600}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.prev{background:var(--card);border-radius:16px;padding:4px 14px;margin-top:14px;font-size:14px}
+.prev>div{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--ln)}.prev>div:last-child{border:0}
+.pri{width:100%;background:var(--ac);color:#fff;padding:15px;border-radius:16px;font-weight:600;margin-top:16px}
+.dng{width:100%;color:var(--rd);background:var(--card);padding:14px;border-radius:16px;margin-top:12px}
+.sm{padding:7px 12px;border-radius:14px;background:var(--okbg);color:var(--ok);font-size:14px;font-weight:600}.sm.un{background:var(--ln);color:var(--mu)}
+.hint{font-size:12px;color:var(--mu);margin:4px}
+</style></head><body>
+<div id="main"></div>
+<nav id="nav"></nav>
+<div id="ov" onclick="if(event.target===this)fechar()"><div id="sh"></div></div>
+<script>
+const $=s=>document.querySelector(s);
+let db=[];try{db=JSON.parse(localStorage.getItem('cp_v1')||'[]')}catch(e){}
+const save=()=>{try{localStorage.setItem('cp_v1',JSON.stringify(db))}catch(e){}};
+const brl=v=>(v/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const hoje=()=>iso(new Date());
+const fd=s=>{const[a,m,d]=s.split('-');return d+'/'+m+'/'+a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function addP(s,k,tp){const[y,m,d]=s.split('-').map(Number);
+ if(tp==='m'){const t=new Date(y,m-1+k,1);t.setDate(Math.min(d,new Date(y,m+k,0).getDate()));return iso(t)}
+ return iso(new Date(y,m-1,d+k*(tp==='q'?15:7)))}
+let tab='home',mes=hoje().slice(0,7),cf='abertas',f={tipo:'parc'};
+const status=p=>p.pago?'rec':(p.venc<hoje()?'atr':'pend');
+const flat=()=>db.flatMap(l=>l.p.map(p=>({l,p}))).sort((a,b)=>a.p.venc.localeCompare(b.p.venc));
+const soma=a=>a.reduce((s,x)=>s+x.p.v,0);
+function rowH({l,p}){const st=status(p),lab={rec:'Pago',atr:'Atrasada',pend:'Pendente'}[st],cls={rec:'paid',atr:'late',pend:'pend'}[st];
+ return `<div class="row ${p.pago?'done':''}" onclick="det('${l.id}')"><button class="ck ${p.pago?'ok':''}" onclick="event.stopPropagation();tg('${l.id}',${p.n})" aria-label="Marcar como pago">${p.pago?'✓':''}</button>
+ <div class="mid"><b>${esc(l.cli)}</b><small>${esc(l.desc||'—')} · ${l.p.length>1?p.n+'/'+l.p.length+' · ':''}${fd(p.venc)}</small></div>
+ <div class="val"><b>${brl(p.v)}</b><small class="${cls}">${lab}</small></div></div>`}
+const lista=(a,vz)=>a.length?a.map(rowH).join(''):`<div class="empty">${vz}</div>`;
+function nav(){const t=[['home','🏠','Início'],['mes','📅','Mês'],['+','＋',''],['contas','🧾','Contas'],['mais','⚙️','Backup']];
+ $('#nav').innerHTML=t.map(x=>x[0]==='+'?`<button class="plus" onclick="novo()" aria-label="Novo">＋</button>`:`<button class="${tab===x[0]?'on':''}" onclick="${x[0]==='mais'?'menu()':`tab='${x[0]}';render()`}"><span>${x[1]}</span>${x[2]}</button>`).join('')}
+function render(){nav();const h=hoje(),a=flat(),pend=a.filter(x=>!x.p.pago);let o='';
+ if(tab==='home'){
+  const atr=pend.filter(x=>x.p.venc<h),prox=pend.filter(x=>x.p.venc>=h&&x.p.venc<=addP(h,1,'s'));
+  o=`<h1>Contas a Pagar</h1><div class="hero"><small>Falta pagar</small><div class="big">${brl(soma(pend))}</div>
+  <div class="st"><div><small>Em atraso</small><b>${brl(soma(atr))}</b></div><div><small>Próx. 7 dias</small><b>${brl(soma(prox))}</b></div><div><small>Já pago</small><b>${brl(soma(a.filter(x=>x.p.pago)))}</b></div></div></div>
+  <h3>Atrasadas (${atr.length})</h3>${lista(atr,'Nenhuma conta atrasada 🎉')}<h3>Vencem em 7 dias (${prox.length})</h3>${lista(prox,'Nada vencendo nos próximos dias')}`}
+ else if(tab==='mes'){
+  const m=a.filter(x=>x.p.venc.slice(0,7)===mes),pg=soma(m.filter(x=>x.p.pago)),tt=soma(m),[y,mm]=mes.split('-');
+  o=`<h1>Mês</h1><div class="mn"><button onclick="mudaMes(-1)" aria-label="Anterior">‹</button><b>${new Date(y,mm-1,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'})}</b><button onclick="mudaMes(1)" aria-label="Próximo">›</button></div>
+  <div class="card"><div class="l1"><small>Total do mês</small><b>${brl(tt)}</b></div><div class="bar"><i style="width:${tt?Math.round(pg/tt*100):0}%"></i></div><small>Pago ${brl(pg)} · Falta ${brl(tt-pg)}</small></div>
+  <h3>Parcelas (${m.length})</h3>${lista(m,'Sem contas neste mês')}`}
+ else{
+  const ls=db.map(l=>{const pg=l.p.filter(p=>p.pago),rs=l.p.filter(p=>!p.pago);return{l,pg,rs}}).filter(x=>cf==='abertas'?x.rs.length:!x.rs.length);
+  o=`<h1>Contas</h1><div class="chips">${[['abertas','Em aberto'],['quitadas','Quitadas']].map(c=>`<button class="chip ${cf===c[0]?'on':''}" onclick="cf='${c[0]}';render()">${c[1]}</button>`).join('')}</div>`+
+  (ls.length?ls.map(({l,pg,rs})=>{const tt=l.p.reduce((s,p)=>s+p.v,0),pv=pg.reduce((s,p)=>s+p.v,0);
+   return `<button class="card" onclick="det('${l.id}')"><div class="l1"><b>${esc(l.cli)}</b><b>${brl(tt)}</b></div><small>${esc(l.desc||'—')}</small><div class="bar"><i style="width:${Math.round(pv/tt*100)}%"></i></div>
+   <small>${pg.length} de ${l.p.length} pagas · ${rs.length?'próxima '+fd(rs[0].venc)+' · falta '+brl(tt-pv):'quitada'}</small></button>`}).join(''):`<div class="empty">Nenhuma conta aqui.<br>Toque em ＋ para lançar.</div>`)}
+ $('#main').innerHTML=o}
+function mudaMes(k){const[y,m]=mes.split('-').map(Number);mes=iso(new Date(y,m-1+k,1)).slice(0,7);render()}
+function tg(id,n){const p=db.find(l=>l.id===id).p.find(x=>x.n===n);p.pago=p.pago?null:hoje();save();render();if($('#ov').classList.contains('show')&&$('#sh').dataset.d===id)det(id)}
+function abrir(h){$('#sh').innerHTML=h;$('#sh').dataset.d='';$('#ov').classList.add('show');$('#sh').scrollTop=0}
+function fechar(){$('#ov').classList.remove('show')}
+function novo(){f={tipo:'parc'};
+ abrir(`<div class="top"><h2>Novo lançamento</h2><button class="x" onclick="fechar()">Cancelar</button></div>
+ <label>Fornecedor / credor</label><input id="cli" placeholder="Nome" autocomplete="off">
+ <label>Descrição (opcional)</label><input id="desc" placeholder="Ex.: Aluguel, energia, cartão…" autocomplete="off">
+ <label>Tipo</label><div class="seg" id="seg"></div><div class="hint" id="th"></div>
+ <div class="g2"><div><label id="vl">Valor total</label><input id="val" inputmode="decimal" placeholder="0,00" oninput="prev()"></div>
+ <div id="npw"><label>Nº de parcelas</label><input id="np" type="number" inputmode="numeric" min="2" max="120" value="3" oninput="prev()"></div></div>
+ <div class="g2"><div><label id="dl">Primeiro vencimento</label><input id="dt" type="date" value="${hoje()}" oninput="prev()"></div>
+ <div id="iw"><label>Intervalo</label><select id="iv" onchange="prev()"><option value="m">Mensal</option><option value="q">Quinzenal</option><option value="s">Semanal</option></select></div></div>
+ <div id="pv"></div><button class="pri" onclick="salvar()">Salvar lançamento</button>`);seg()}
+function seg(){
+ const t=[['unica','Sem parcelas'],['parc','Parcelado'],['fixa','Parcela fixa']];
+ $('#seg').innerHTML=t.map(x=>`<button class="${f.tipo===x[0]?'on':''}" onclick="f.tipo='${x[0]}';seg()">${x[1]}</button>`).join('');
+ $('#th').textContent={unica:'Conta com um único vencimento.',parc:'Você informa o total e ele é dividido igualmente.',fixa:'Você informa o valor de cada parcela.'}[f.tipo];
+ $('#vl').textContent=f.tipo==='fixa'?'Valor de cada parcela':f.tipo==='unica'?'Valor':'Valor total';
+ $('#dl').textContent=f.tipo==='unica'?'Vencimento':'Primeiro vencimento';
+ $('#npw').style.visibility=$('#iw').style.visibility=f.tipo==='unica'?'hidden':'visible';prev()}
+function gerar(){
+ const c=Math.round(parseFloat(($('#val').value||'').replace(/\./g,'').replace(',','.'))*100),dt=$('#dt').value;
+ const n=f.tipo==='unica'?1:Math.min(120,parseInt($('#np').value)||0);
+ if(!(c>0)||!dt||n<1)return null;
+ const base=f.tipo==='parc'?Math.floor(c/n):c,tp=$('#iv').value,r=[];
+ for(let i=0;i<n;i++)r.push({n:i+1,venc:addP(dt,i,tp),v:(f.tipo==='parc'&&i===n-1)?c-base*(n-1):base,pago:null});
+ return r}
+function prev(){const r=gerar();
+ $('#pv').innerHTML=r&&r.length>1?`<div class="prev">${r.map(p=>`<div><span>${p.n}/${r.length} · ${fd(p.venc)}</span><b>${brl(p.v)}</b></div>`).join('')}<div><span>Total</span><b>${brl(soma(r.map(p=>({p}))))}</b></div></div>`:''}
+function salvar(){
+ const cli=$('#cli').value.trim();
+ if(!cli){$('#cli').focus();return alert('Informe o nome do fornecedor.')}
+ const p=gerar();if(!p)return alert('Confira valor, vencimento e número de parcelas.');
+ db.push({id:Date.now().toString(36),cli,desc:$('#desc').value.trim(),tipo:f.tipo,p});
+ save();fechar();tab='home';render()}
+function det(id){const l=db.find(x=>x.id===id);if(!l)return;
+ const tot=l.p.reduce((a,p)=>a+p.v,0),pg=l.p.filter(p=>p.pago).reduce((a,p)=>a+p.v,0);
+ abrir(`<div class="top"><h2>${esc(l.cli)}</h2><button class="x" onclick="fechar()">Fechar</button></div>
+ <div class="hint">${esc(l.desc||'Sem descrição')} · Total ${brl(tot)} · Pago ${brl(pg)} · Falta ${brl(tot-pg)}</div>
+ <div class="prev">${l.p.map(p=>{const st=status(p);return `<div><span>${l.p.length>1?p.n+'/'+l.p.length+' · ':''}${fd(p.venc)}<br><small class="${st==='rec'?'paid':st==='atr'?'late':'pend'}">${p.pago?'Pago em '+fd(p.pago):st==='atr'?'Atrasada':'Pendente'}</small></span>
+ <span><b>${brl(p.v)}</b> <button class="sm ${p.pago?'un':''}" onclick="tg('${l.id}',${p.n})">${p.pago?'Desfazer':'Pagar'}</button></span></div>`}).join('')}</div>
+ <button class="dng" onclick="del('${l.id}')">Excluir lançamento</button>`);$('#sh').dataset.d=id}
+function del(id){if(confirm('Excluir este lançamento e todas as parcelas?')){db=db.filter(l=>l.id!==id);save();fechar();render()}}
+function menu(){abrir(`<div class="top"><h2>Backup</h2><button class="x" onclick="fechar()">Fechar</button></div>
+ <div class="hint">Os dados ficam salvos neste aparelho. Copie um backup de vez em quando e guarde em Notas ou WhatsApp.</div>
+ <button class="pri" onclick="bk()">Copiar backup</button><button class="dng" onclick="rs()">Restaurar backup</button>`)}
+function bk(){const t=JSON.stringify(db);(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Backup copiado! Cole em Notas para guardar.')).catch(()=>prompt('Copie o texto abaixo:',t))}
+function rs(){const t=prompt('Cole aqui o backup:');if(!t)return;try{const d=JSON.parse(t);if(!Array.isArray(d))throw 0;if(confirm('Isso substitui os dados atuais. Continuar?')){db=d;save();fechar();render()}}catch(e){alert('Backup inválido.')}}
+render();
+</script></body></html>
